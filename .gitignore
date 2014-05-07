@@ -1,12 +1,12 @@
-Temp/
-Library/
-Obj/
+/Temp/*
+/Library/*
+/Obj/*
  
 *.csproj
 *.unityproj
 *.sln
 *.user
 *.userprefs
-*.DS_s	tore
+*.DS_store
 
 test.exe
