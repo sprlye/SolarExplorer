@@ -15,7 +15,6 @@ public class UniWiiCheck : MonoBehaviour {
 	private String display;
 	
 	void OnGUI() {
-		wiimote_start();
 		int c = wiimote_count();
 		if (c>0) {
 			display = "";
@@ -28,7 +27,8 @@ public class UniWiiCheck : MonoBehaviour {
 	}
 	
 	void Start (){
-		wiimote_start();}
+		wiimote_start();
+	}
 	void OnApplicationQuit() {
 		wiimote_stop();}
 }
