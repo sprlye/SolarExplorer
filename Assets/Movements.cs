@@ -97,5 +97,14 @@ public class Movements : MonoBehaviour {
 			}
 			
 		}
+
+		
+//		if(Input.GetKey(KeyCode.N)){
+//			transform.FindChild("Gaze").Rotate(-Vector3.up, 100 * Time.deltaTime);
+//		}
+//		if(Input.GetKey(KeyCode.M))
+//		{
+//			transform.FindChild("Gaze").Rotate(Vector3.up, 100 * Time.deltaTime);
+//		}
 	}
 }
