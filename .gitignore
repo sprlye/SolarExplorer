@@ -1,6 +1,6 @@
-$PROJDIR/Temp/
-$PROJDIR/Library/
-$PROJDIR/Obj/
+/Temp/
+/Library/
+/Obj/
  
 *.csproj
 *.unityproj
@@ -8,3 +8,5 @@ $PROJDIR/Obj/
 *.user
 *.userprefs
 *.DS_store
+
+test.exe
