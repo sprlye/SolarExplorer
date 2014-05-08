@@ -5,46 +5,92 @@ public class Movements : MonoBehaviour {
 	//TODO: enable the user to watch in another direction than where the one he is going
 	
 	float moveSpeed = 2.0f;
-	float turnSpeed = 100.0f;
+	float turnSpeed = 250.0f;
 	float mass = 100.0f;
 	public GameObject[] planets;
 	public GameObject[] stars;
 	public GameObject[] blackholes;
-	
+
+	Vector3 moveDirection, rotateDirection;
+
+	//Not necessary but for easy of use (some of the rotate vectors very unclear/ hard to remember)
+	public  Vector3 FORWARD = Vector3.forward;
+	public  Vector3 BACKWARD = -Vector3.forward;
+	public  Vector3 LEFT = Vector3.left;
+	public  Vector3 RIGHT = Vector3.right;
+	public  Vector3 ROTATE_LEFT = -Vector3.up;
+	public  Vector3 ROTATE_RIGHT = Vector3.up;
+	public  Vector3 ROTATE_UP = Vector3.left;
+	public  Vector3 ROTATE_DOWN = -Vector3.left;
+
 	// Use this for initialization
 	void Start () {
 		planets = GameObject.FindGameObjectsWithTag("Planet");
 		stars = GameObject.FindGameObjectsWithTag("Star");
 		blackholes = GameObject.FindGameObjectsWithTag("Blackhole");
+
+		moveDirection = new Vector3 (0,0,0);
+		rotateDirection = new Vector3 (0,0,0);
+	}
+	
+	public void moveInDirection(Vector3 direction ){
+		this.moveDirection += direction;
+		//Debug.Log (this.moveDirection.x);
+	}
+	
+	public void rotateInDirection(Vector3 direction ){
+		this.rotateDirection += direction;
+		//Debug.Log (this.moveDirection.x);
+	}
+	
+	void resetMoveDirection(){
+//		moveDirection.x = 0;
+//		moveDirection.y = 0;
+//		moveDirection.z = 0;
+		moveDirection.Set(0,0,0);
+	}
+
+	void resetRotation(){
+//		rotateDirection.x = 0;
+//		rotateDirection.y = 0;
+//		rotateDirection.z = 0;
+
+		rotateDirection.Set(0,0,0);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+
+		transform.Translate (moveDirection*moveSpeed*Time.deltaTime);
+		transform.Rotate (rotateDirection*turnSpeed * Time.deltaTime);
 		
-		if (Input.GetKey (KeyCode.Space)) {
-			transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
-		}
-		
-		if (Input.GetKey (KeyCode.LeftAlt)) {
-			transform.Translate(- Vector3.forward * moveSpeed * Time.deltaTime);
-		}
-		
-		if(Input.GetKey(KeyCode.RightArrow))
-		{	//Debug.Log(transform.position.x);
-			transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime);
-		}
-		if(Input.GetKey(KeyCode.LeftArrow))
-		{
-			transform.Rotate(Vector3.up, -turnSpeed * Time.deltaTime);
-		}
-		if(Input.GetKey(KeyCode.UpArrow))
-		{
-			transform.Rotate(Vector3.left, turnSpeed * Time.deltaTime);
-		}
-		if(Input.GetKey(KeyCode.DownArrow))
-		{
-			transform.Rotate(Vector3.left, -turnSpeed * Time.deltaTime);
-		}
+//		if (Input.GetKey (KeyCode.Space)) {
+//			Debug.Log("PRESSED SPACE");
+//			transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+//		}
+//		
+//		if (Input.GetKey (KeyCode.LeftAlt)) {
+//			Debug.Log("Press alt");
+//			transform.Translate(- Vector3.forward * moveSpeed * Time.deltaTime);
+//		}
+//		
+//		if(Input.GetKey(KeyCode.RightArrow))
+//		{	//Debug.Log(transform.position.x);
+//			transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime);
+//		}
+//		if(Input.GetKey(KeyCode.LeftArrow))
+//		{
+//			transform.Rotate(Vector3.up, -turnSpeed * Time.deltaTime);
+//		}
+//		if(Input.GetKey(KeyCode.UpArrow))
+//		{
+//			transform.Rotate(Vector3.left, turnSpeed * Time.deltaTime);
+//		}
+//		if(Input.GetKey(KeyCode.DownArrow))
+//		{
+//			transform.Rotate(Vector3.left, -turnSpeed * Time.deltaTime);
+//		}
 
 		/*
 		//Compute the force applied on the character by the environment
@@ -106,5 +152,8 @@ public class Movements : MonoBehaviour {
 //		{
 //			transform.FindChild("Gaze").Rotate(Vector3.up, 100 * Time.deltaTime);
 //		}
+
+		resetMoveDirection ();
+		resetRotation ();
 	}
 }
