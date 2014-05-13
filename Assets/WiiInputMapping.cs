@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 public class WiiInputMapping : MonoBehaviour {
 
@@ -13,6 +14,8 @@ public class WiiInputMapping : MonoBehaviour {
 	private static extern void wiimote_stop();
 	[DllImport ("UniWii")]
 	private static extern int wiimote_count();
+	[DllImport ("UniWii")]	
+	private static extern bool wiimote_enableIR( int which );
 
 
 	//Acceleration
@@ -39,10 +42,16 @@ public class WiiInputMapping : MonoBehaviour {
 	[DllImport ("UniWii")]
 	private static extern float wiimote_getYaw(int which);
 
+	//Wii buttons
+	[DllImport ("UniWii")]
+	private static extern bool wiimote_getButtonA(int which);
+	[DllImport ("UniWii")]
+	private static extern bool wiimote_getButtonB(int which);
+
 
 	//Nunchuck functions
 	[DllImport ("UniWii")]
-	private static extern int wiimote_isExpansionPortEnabled();
+	private static extern int wiimote_isExpansionPortEnabled(int which);
 
 	[DllImport ("UniWii")]
 	private static extern byte wiimote_getNunchuckStickX(int which);
@@ -60,18 +69,59 @@ public class WiiInputMapping : MonoBehaviour {
 
 
 
+	//Main charcter objects required
 	public Movements mainCharacter;
-
-
+	GameObject Luna;
+	
 	//Testing text
 	String display;
 
-
+	//Constants
 	public const int PLAYER1 = 0;
 
-	//Userdata
+	//Wiimote data
 	Vector3 acceleration, gyro;
 
+	//Objects and information required for interaction with an object
+	bool wiimoteInteractingWithObject;
+	GameObject interactingObject;
+	int pointerX, pointerY;
+	string cursorText;
+
+
+	//Variables needed for the handling of the IR Data
+	Queue<float> irXValues = new Queue<float>();
+	Queue<float> irYValues = new Queue<float>();
+	public const int IRVALUES = 10;
+
+
+	float getAverageIR(Queue<float> irvalues){
+		float average = 0;
+		foreach (float value in irvalues) {
+			average += value;
+		}
+		return average / IRVALUES;
+	}
+
+	void smoothValues(ref float irX, ref float irY){
+		
+		//Remove values from queue if it is full
+		if(irXValues.Count > IRVALUES){
+			irXValues.Dequeue();
+			irYValues.Dequeue();
+		}
+		
+		//Add values to queue if the difference is not too big (to avoid jitter and have more smooth motions
+		if(Math.Abs(irX - getAverageIR(irXValues)) < 1.0) 
+			irXValues.Enqueue(irX);
+		if(Math.Abs(irY - getAverageIR(irYValues)) < 1.0) 
+			irYValues.Enqueue(irY);
+		
+		//Get average new IR value ( again to ensure smooth motion since raw signal is very noisy)
+		irX = getAverageIR(irXValues);
+		irY = getAverageIR(irYValues);
+
+	}
 
 	void Update() {
 		
@@ -84,9 +134,11 @@ public class WiiInputMapping : MonoBehaviour {
 			float roll = Mathf.Round(wiimote_getRoll(PLAYER1));
 			float p = Mathf.Round(wiimote_getPitch(PLAYER1));
 			float yaw = Mathf.Round(wiimote_getYaw(PLAYER1));
+			float ir_x = wiimote_getIrX(PLAYER1);
+			float ir_y = wiimote_getIrY(PLAYER1);
 			display += "Wiimote " + PLAYER1 + "\n " +
 						"accX: " + x + " accY: " + y + " accZ: " + z + "\n " +
-						"roll: " + roll + " pitch: " + p + " yaw: " + yaw; //+ " \n "IR X: " + ir_x + " IR Y: " + ir_y + "\n";
+						"roll: " + roll + " pitch: " + p + " yaw: " + yaw + " \n IR X: " + ir_x + " IR Y: " + ir_y + "\n";
 			display += "\n Nunchuck:\n "+
 				"(x: " + wiimote_getNunchuckStickX(PLAYER1) + " , y:" + wiimote_getNunchuckStickY(PLAYER1) + " )\n " + 
 					"(ax: " + wiimote_getNunchuckAccX(PLAYER1) + " , ay:" + wiimote_getNunchuckAccZ(PLAYER1) + " )";
@@ -123,17 +175,17 @@ public class WiiInputMapping : MonoBehaviour {
 			float nunchuckYSpeed = Math.Abs(130f - nunchuckY)/100;
 
 
-			if( nunchuckX < 115 && nunchuckX > 10 ){
+			if( nunchuckX < 110 && nunchuckX > 10 ){
 				mainCharacter.rotateInDirection(mainCharacter.ROTATE_LEFT*nunchuckXSpeed);
 			}
-			if( nunchuckX > 125 ){
+			if( nunchuckX > 130 ){
 				mainCharacter.rotateInDirection(mainCharacter.ROTATE_RIGHT*nunchuckXSpeed);
 			}
 			
-			if(nunchuckY < 125 && nunchuckY  > 10 ){
+			if(nunchuckY < 120 && nunchuckY  > 10 ){
 				mainCharacter.rotateInDirection(mainCharacter.ROTATE_DOWN*nunchuckYSpeed);
 			}
-			if(nunchuckY  > 135 ){
+			if(nunchuckY  > 140 ){
 				mainCharacter.rotateInDirection(mainCharacter.ROTATE_UP*nunchuckYSpeed);
 			}
 
@@ -145,21 +197,97 @@ public class WiiInputMapping : MonoBehaviour {
 				mainCharacter.moveInDirection(mainCharacter.BACKWARD);
 			}
 
+			//-- hämta in IR värden (-1,-1) - (1,1)
+			float irX = wiimote_getIrX(PLAYER1);
+			float irY = wiimote_getIrY(PLAYER1);
+			
+			//Debug.Log ("X: " + irX + " , Y: " + irY);
 
+			//Check that IR information is available
+			if(!float.IsNaN(irX) && !float.IsNaN(irY)){
+
+				//Get smoothed values (average of last 5, without jumps etc)
+				smoothValues(ref irX, ref irY);
+
+				//Rescale values to match screen size and get correct type
+				pointerX = Mathf.RoundToInt(Screen.width*(irX + 1)/2);
+				pointerY = Mathf.RoundToInt(Screen.height* ( 1 - irY)/2);
+
+				//Check if wiimote A button is pressed (ie user wish to interact with the scene
+				if(wiimote_getButtonA(PLAYER1)){
+
+					Debug.Log("Tja A");
+
+					//If user is not already interacting with object check wether he is hitting an object
+					if(!wiimoteInteractingWithObject){
+						Debug.Log("Throw a ray!");
+
+						//Create a new ray from the camera and shoot into scene
+						Ray ray = Camera.current.ScreenPointToRay(new Vector3(pointerX,pointerY,Camera.current.transform.position.z));
+						RaycastHit hit;
+
+						//Check if it hits something
+						if(Physics.Raycast(ray, out hit)){
+
+							//Check which object it hit and save it
+							Debug.Log ("Hit object: " + hit.transform.gameObject.name + "\n");
+							interactingObject = hit.transform.gameObject;
+
+							//Set interacting value to true
+							wiimoteInteractingWithObject = true;
+						}
+					}
+					else{
+						// TODO decide what to do with the object that is being interacted with. 
+
+						Debug.Log("Interacting with object: " + interactingObject.name);
+
+						cursorText = "x: " + pointerX + "\n y: " + pointerY;
+						//interactingObject.transform.Translate();
+					}
+
+
+				}
+				else{
+					//If A button is not pressed there is no interaction and it should be dropped. 
+					wiimoteInteractingWithObject = false;
+				}
+			
+			}
+			else{
+				//display = "IR has to be enabled in order for this application to work";
+			}
 		
 		}
 		else display = "Press the '1' and '2' buttons on your Wii Remote.";
 	}
 
 	void OnGUI(){
-		GUI.Label( new Rect(10,Screen.height-100, 500, 100), display);
+		GUI.Label( new Rect(20,Screen.height-150, 500, 150), display);
+		GUI.Box (new Rect (pointerX, pointerY, 50, 50), cursorText);
 
 	}
 	
 	void Start (){
+
+		//Main player
+		Luna = GameObject.Find("Luna");
+
+		//Wiimote values
 		acceleration = new Vector3 (0,0,0);
 		gyro = new Vector3 (0,0,0);
+
+		//Interaction objects
+		wiimoteInteractingWithObject = false;
+		cursorText = "";
+
+		//Wiimote start
 		wiimote_start();
+		int c = wiimote_count();
+		if (c > 0) {
+			wiimote_enableIR (PLAYER1);
+		}
+
 
 	}
 	void OnApplicationQuit() {
