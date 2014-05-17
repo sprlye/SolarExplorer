@@ -6,38 +6,48 @@ public class RayCastDemo : MonoBehaviour {
 	public Transform target1, target2;
 	private string display;
 	
-	GameObject go;
+	GameObject interactingObject;
 	bool hittingObject;
+	Vector3 screenPosition, currentScreenPosition, offset;
 	
 	
 	void Update () {
+
+		//Get input
 		if (Input.GetMouseButton(0)) {
 
-			Ray ray = Camera.current.ScreenPointToRay(Input.mousePosition);
+			//Check for hit
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 			
-			display = "mouseposition( " + Input.mousePosition.x + "," + Input.mousePosition.y + "," + Input.mousePosition.z + ")";
 			if (!hittingObject && Physics.Raycast(ray, out hit)) {
-				if (hit.transform == target1) {
-					Debug.Log("Hit target 1");
-				} else if (hit.transform == target2) {
-					Debug.Log("Hit target 2");
-				}
+//				if (hit.transform == target1) {
+//					Debug.Log("Hit target 1");
+//				} else if (hit.transform == target2) {
+//					Debug.Log("Hit target 2");
+//				}
 				Debug.Log("Hit something " + hit.transform.gameObject.name);
-				
-				go = hit.transform.gameObject;
+
+				//Save that we are hitting something
+				interactingObject = hit.transform.gameObject;
 				hittingObject = true;
-				
+
+				//Save the objects position in screen coordinates
+				screenPosition = Camera.main.WorldToScreenPoint(interactingObject.transform.position);
+
+				//calculate difference between object position and mouse position
+				offset = interactingObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPosition.z));
 				
 			}
+
 			
 			
 			if(hittingObject){
-				//Debug.Log("Moharhar");
-				Vector3 temp = Input.mousePosition;
-				temp.z = go.transform.position.z - Camera.current.transform.position.z;
-				
-				go.transform.Translate(Camera.current.ScreenToWorldPoint(temp) - go.transform.position);
+
+				Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPosition.z);
+				curScreenPoint = Camera.main.ScreenToWorldPoint(curScreenPoint) + offset;
+
+				interactingObject.transform.position = curScreenPoint;
 			}
 		} 
 		else {
