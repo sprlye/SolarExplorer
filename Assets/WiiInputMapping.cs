@@ -31,8 +31,8 @@ public class WiiInputMapping : MonoBehaviour {
 	private static extern float wiimote_getIrX(int which);
 	[DllImport ("UniWii")]
 	private static extern float wiimote_getIrY(int which);
-	[DllImport ("UniWii")]
-	private static extern float wiimote_isIREnabled(int which);
+//	[DllImport ("UniWii")]
+//	private static extern float wiimote_isIREnabled(int which);
 
 	//Gyroscope
 	[DllImport ("UniWii")]
