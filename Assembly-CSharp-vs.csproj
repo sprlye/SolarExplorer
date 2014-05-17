@@ -46,9 +46,13 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\HeadMovementTest.cs" />
+     <Compile Include="Assets\KeyboardInputMapping.cs" />
      <Compile Include="Assets\Movements.cs" />
      <Compile Include="Assets\MovementsWithHeadTracking.cs" />
+     <Compile Include="Assets\RayCastDemo.cs" />
      <Compile Include="Assets\UniWiiCheck.cs" />
+     <Compile Include="Assets\WiiInputMapping.cs" />
  <Reference Include="UniWii">
  <HintPath>Assets\Plugins\UniWii.dll</HintPath>
  </Reference>
