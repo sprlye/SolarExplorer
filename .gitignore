@@ -1,6 +1,10 @@
 /Temp/*
 /Library/*
 /Obj/*
+
+Library/
+Temp/
+Obj/
  
 *.csproj
 *.unityproj
@@ -10,5 +14,6 @@
 *.DS_store
 
 test.exe
+test.app
 
 #essai commit
