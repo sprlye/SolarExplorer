@@ -19,7 +19,7 @@ public class RayCastDemo : MonoBehaviour {
 
 			line.enabled = true;
 
-			Debug.Log ("Mouseposition: (" + Input.mousePosition.x + " , " + Input.mousePosition.y + ")");
+//			Debug.Log ("Mouseposition: (" + Input.mousePosition.x + " , " + Input.mousePosition.y + ")");
 			//Check for hit
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;

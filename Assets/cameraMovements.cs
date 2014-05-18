@@ -80,7 +80,7 @@ public class cameraMovements : MonoBehaviour {
 		Quaternion xQuaternionY = Quaternion.AngleAxis(yaw * -multiplyer, new Vector3(0, 1, 0));
 		transform.localRotation = xQuaternionP*xQuaternionR*xQuaternionY;
 
-		Debug.Log ("Position; " + transform.position.x + " , " + transform.position.y + " , " + transform.position.z);
+//		Debug.Log ("Position; " + transform.position.x + " , " + transform.position.y + " , " + transform.position.z);
 
 
 //		transform.position = cameraPosition;

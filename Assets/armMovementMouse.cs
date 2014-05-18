@@ -15,7 +15,7 @@ public class armMovementMouse : MonoBehaviour {
 
 		//Create target plane
 		targetPlane = new Plane (-this.transform.forward, 
-		                               new Vector3(transform.position.x, transform.position.y, transform.position.z) + this.transform.forward*3);
+		                               new Vector3(transform.position.x, transform.position.y, transform.position.z) + this.transform.forward*2);
 
 		float dist = 10.0f;
 
