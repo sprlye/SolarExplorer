@@ -87,12 +87,13 @@ public class WiiInputMapping : MonoBehaviour {
 	GameObject interactingObject;
 	int pointerX, pointerY;
 	string cursorText;
+	Vector3 screenPosition, offset;
 
 
 	//Variables needed for the handling of the IR Data
 	Queue<float> irXValues = new Queue<float>();
 	Queue<float> irYValues = new Queue<float>();
-	public const int IRVALUES = 10;
+	public const int IRVALUES = 20;
 
 
 	float getAverageIR(Queue<float> irvalues){
@@ -110,11 +111,12 @@ public class WiiInputMapping : MonoBehaviour {
 			irXValues.Dequeue();
 			irYValues.Dequeue();
 		}
-		
+
+		var smoothing = 1.0;
 		//Add values to queue if the difference is not too big (to avoid jitter and have more smooth motions
-		if(Math.Abs(irX - getAverageIR(irXValues)) < 1.0) 
+		if(Math.Abs(irX - getAverageIR(irXValues)) < smoothing) 
 			irXValues.Enqueue(irX);
-		if(Math.Abs(irY - getAverageIR(irYValues)) < 1.0) 
+		if(Math.Abs(irY - getAverageIR(irYValues)) < smoothing) 
 			irYValues.Enqueue(irY);
 		
 		//Get average new IR value ( again to ensure smooth motion since raw signal is very noisy)
@@ -204,7 +206,7 @@ public class WiiInputMapping : MonoBehaviour {
 			//Debug.Log ("X: " + irX + " , Y: " + irY);
 
 			//Check that IR information is available
-			if(!float.IsNaN(irX) && !float.IsNaN(irY)){
+			if(!float.IsNaN(irX) && !float.IsNaN(irY) && irX != -100 && irY != -100 ){
 
 				//Get smoothed values (average of last 5, without jumps etc)
 				smoothValues(ref irX, ref irY);
@@ -235,7 +237,19 @@ public class WiiInputMapping : MonoBehaviour {
 
 							//Set interacting value to true
 							wiimoteInteractingWithObject = true;
+							
+							//Save the objects position in screen coordinates
+							screenPosition = Camera.main.WorldToScreenPoint(interactingObject.transform.position);
+							
+							//calculate difference between object position and mouse position
+							offset = interactingObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(pointerX, -pointerY, screenPosition.z));
+
 						}
+						else{
+							Debug.Log ("Didn't hit anything :( ");
+						}
+						cursorText = "x: " + pointerX + "\n y: " + pointerY;
+
 					}
 					else{
 						// TODO decide what to do with the object that is being interacted with. 
@@ -244,6 +258,13 @@ public class WiiInputMapping : MonoBehaviour {
 
 						cursorText = "x: " + pointerX + "\n y: " + pointerY;
 						//interactingObject.transform.Translate();
+
+						
+						Vector3 curScreenPoint = new Vector3(pointerX, -pointerY, screenPosition.z);
+						curScreenPoint = Camera.main.ScreenToWorldPoint(curScreenPoint) + offset;
+						
+						interactingObject.transform.position = curScreenPoint;
+
 					}
 
 

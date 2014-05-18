@@ -16,6 +16,8 @@ public class RayCastDemo : MonoBehaviour {
 		//Get input
 		if (Input.GetMouseButton(0)) {
 
+
+			Debug.Log ("Mouseposition: (" + Input.mousePosition.x + " , " + Input.mousePosition.y + ")");
 			//Check for hit
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
