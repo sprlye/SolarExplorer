@@ -5,7 +5,7 @@ public class Movements : MonoBehaviour {
 	
 	float G = 6.67384f * Mathf.Pow(10, -11);
 	
-	float moveSpeed = 10000.0f;
+	float moveSpeed = 100000.0f;
 	float turnSpeed = 250.0f;
 	float mass = 1000.0f;
 	float range = 5.0f;//Range where the space elements are used for the computation of forces
@@ -108,27 +108,27 @@ public class Movements : MonoBehaviour {
 	if(!gameOver){
 	
 	//Check if collision with an object
-		for(int i = 0; i < this.planets.Length ; i++){
-				if(this.getDistance(this.planets[i]) <= ( this.planets[i].transform.localScale.x +  this.planets[i].transform.localScale.y   + this.planets[i].transform.localScale.z ) / 3.0f){
-				gameOver = true;
-				message = "You hit a planet!";
-			}
-			
-		}
-		for(int i = 0; i < this.stars.Length ; i++){
-				if(this.getDistance(this.stars[i]) <= ( this.stars[i].transform.localScale.x +  this.stars[i].transform.localScale.y   + this.stars[i].transform.localScale.z ) / 3.0f){
-				gameOver = true;
-				message = "You hit a star!";
-			}
-			
-		}
-		for(int i = 0; i < this.blackholes.Length ; i++){
-				if(this.getDistance(this.blackholes[i]) <= ( this.blackholes[i].transform.localScale.x +  this.blackholes[i].transform.localScale.y   + this.blackholes[i].transform.localScale.z ) / 3.0f){
-				gameOver = true;
-				message = "You got absorbed by a blackhole!";
-			}
-			
-		}
+//		for(int i = 0; i < this.planets.Length ; i++){
+//				if(this.getDistance(this.planets[i]) <= ( this.planets[i].transform.localScale.x +  this.planets[i].transform.localScale.y   + this.planets[i].transform.localScale.z ) / 3.0f){
+//				gameOver = true;
+//				message = "You hit a planet!";
+//			}
+//			
+//		}
+//		for(int i = 0; i < this.stars.Length ; i++){
+//				if(this.getDistance(this.stars[i]) <= ( this.stars[i].transform.localScale.x +  this.stars[i].transform.localScale.y   + this.stars[i].transform.localScale.z ) / 3.0f){
+//				gameOver = true;
+//				message = "You hit a star!";
+//			}
+//			
+//		}
+//		for(int i = 0; i < this.blackholes.Length ; i++){
+//				if(this.getDistance(this.blackholes[i]) <= ( this.blackholes[i].transform.localScale.x +  this.blackholes[i].transform.localScale.y   + this.blackholes[i].transform.localScale.z ) / 3.0f){
+//				gameOver = true;
+//				message = "You got absorbed by a blackhole!";
+//			}
+//			
+//		}
 	
 	
 	

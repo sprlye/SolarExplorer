@@ -20,7 +20,7 @@ public class armMovementMouse : MonoBehaviour {
 		float dist = 10.0f;
 
 		//Cast a ray from  mouse 
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		Ray ray = Camera.current.ScreenPointToRay(Input.mousePosition);
 
 		//Check if it hits the plane		
 		if (targetPlane.Raycast (ray, out dist)) {

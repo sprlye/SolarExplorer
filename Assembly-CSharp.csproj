@@ -54,6 +54,7 @@
      <Compile Include="Assets\UDPReceive.cs" />
      <Compile Include="Assets\UniWiiCheck.cs" />
      <Compile Include="Assets\WiiInputMapping.cs" />
+     <Compile Include="Assets\armMovementMouse.cs" />
      <Compile Include="Assets\cameraMovements.cs" />
  <Reference Include="UniWii">
  <HintPath>Assets\Plugins\UniWii.dll</HintPath>

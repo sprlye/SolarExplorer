@@ -135,26 +135,26 @@ public class UDPReceive : MonoBehaviour {
     private  void ReceiveData() 
     {
         client = new UdpClient(port);
-		print("ReceiveData function ");
+		//print("ReceiveData function ");
 		while (true) 
         {
-			print("ReceiveData function ");
+			//print("ReceiveData function ");
 
 //			try 
 //            {
                 // Bytes.
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 29129);
 //				if (anyIP.Equals(null))
-				print("anyIP " + port );
+				//print("anyIP " + port );
 
                 byte[] data = client.Receive(ref anyIP);
 				if (data.Equals(null))
-					print("data ok ");
+					//print("data ok ");
 
 
 				// Bytes with the ASCII coding in the text format code.
                 string text = Encoding.ASCII.GetString(data, 0, data.Length);
-				print("data "+text);
+				//print("data "+text);
 				parseString(text);
 //				string[] words = text.Split('	');
 ////				// The recalled text indication
@@ -190,7 +190,7 @@ public class UDPReceive : MonoBehaviour {
 		pitch = float.Parse(str[index++]);
 		yaw = float.Parse(str[index++]);
 		roll = float.Parse(str[index++]);
-		print("xpos = "+ xPos + "ypos = " + yPos);
+		//print("xpos = "+ xPos + "ypos = " + yPos);
 	}
 	// getLatestUDPPacket
     // cleans up the rest
