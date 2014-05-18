@@ -23,7 +23,7 @@ public class RayCastDemo : MonoBehaviour {
 			//Check for hit
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
-			line.SetPosition(0, ray.origin);
+			line.SetPosition(0, this.transform.position);
 
 			
 			if (!hittingObject && Physics.Raycast(ray, out hit)) {
@@ -36,7 +36,7 @@ public class RayCastDemo : MonoBehaviour {
 
 				//Save that we are hitting something
 				interactingObject = hit.transform.gameObject;
-				//line.SetPosition(1, hit.point);
+				line.SetPosition(1, hit.point);
 
 				hittingObject = true;
 
@@ -57,7 +57,7 @@ public class RayCastDemo : MonoBehaviour {
 				line.SetPosition(1, curScreenPoint);
 			}
 			else{
-				line.SetPosition(1, ray.origin);
+				line.SetPosition(1, this.transform.position);
 			}
 
 
@@ -66,7 +66,7 @@ public class RayCastDemo : MonoBehaviour {
 		else {
 			Debug.Log("Hit nothing");
 			hittingObject = false;
-				line.enabled = false;
+			line.enabled = false;
 
 		}
 
