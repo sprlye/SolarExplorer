@@ -148,7 +148,7 @@ public class UDPReceive : MonoBehaviour {
 				//print("anyIP " + port );
 
                 byte[] data = client.Receive(ref anyIP);
-				if (data.Equals(null))
+//				if (data.Equals(null))
 					//print("data ok ");
 
 
