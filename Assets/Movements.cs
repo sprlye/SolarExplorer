@@ -2,22 +2,25 @@
 using System.Collections;
 
 public class Movements : MonoBehaviour {
-	//TODO: enable the user to watch in another direction than where the one he is going
 	
 	float G = 6.67384f * Mathf.Pow(10, -11);
 	
-	float moveSpeed = 2.0f;
+	float moveSpeed = 10000.0f;
 	float turnSpeed = 250.0f;
-	float mass = 100.0f;
+	float mass = 1000.0f;
 	float range = 5.0f;//Range where the space elements are used for the computation of forces
-	Vector3 velocity = new Vector3 (0,0,0);
-	Vector3 acceleration = new Vector3 (0,0,0);
+	public Vector3 velocity = new Vector3 (0,0,0);
+	public Vector3 acceleration = new Vector3 (0,0,0);
+	float maxRange = 100f;
 	public GameObject[] planets;
 	public GameObject[] stars;
 	public GameObject[] blackholes;
-	float planetsVolumicMass = 6000000.0f;
-	float starsVolumicMass = 10000000.0f;
-	float blackholesVolumicMass = 10000000.0f;
+	float planetsVolumicMass = 600000000.0f;
+	float starsVolumicMass = 1000000000.0f;
+	float blackholesVolumicMass = 10000000000.0f;
+	
+	bool gameOver = false;
+	string message = "";
 	
 	Vector3 moveDirection, rotateDirection;
 	
@@ -38,6 +41,19 @@ public class Movements : MonoBehaviour {
 	Vector3 getDirection(GameObject obj){//Returns the vector from obj to this
 		return this.transform.position - obj.transform.position;
 		//return new Vector3(- (this.transform.position.x -  obj.transform.position.x), - (this.transform.position.y -  obj.transform.position.y), - (this.transform.position.z -  obj.transform.position.z));
+	}
+	
+	
+	void OnGUI () {
+	if(gameOver){
+		// Make a background box
+			GUI.Box(new Rect(Screen.width/4.0f,Screen.height/4.0f,Screen.width/2.0f,Screen.height/2.0f), message);
+		
+		// Make the first button. If it is pressed, Application.Loadlevel (1) will be executed
+			if(GUI.Button(new Rect((Screen.width/2.0f) - 20f,(Screen.height/2.0f) - 10f,60f,25f), "Restart")) {
+			Application.LoadLevel(Application.loadedLevel);
+		}
+		}
 	}
 	
 	// Use this for initialization
@@ -77,12 +93,42 @@ public class Movements : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+	
+	
+	if(!gameOver){
+	
+	//Check if collision with an object
+		for(int i = 0; i < this.planets.Length ; i++){
+				if(this.getDistance(this.planets[i]) <= ( this.planets[i].transform.localScale.x +  this.planets[i].transform.localScale.y   + this.planets[i].transform.localScale.z ) / 3.0f){
+				gameOver = true;
+				message = "You hit a planet!";
+			}
+			
+		}
+		for(int i = 0; i < this.stars.Length ; i++){
+				if(this.getDistance(this.stars[i]) <= ( this.stars[i].transform.localScale.x +  this.stars[i].transform.localScale.y   + this.stars[i].transform.localScale.z ) / 3.0f){
+				gameOver = true;
+				message = "You hit a star!";
+			}
+			
+		}
+		for(int i = 0; i < this.blackholes.Length ; i++){
+				if(this.getDistance(this.blackholes[i]) <= ( this.blackholes[i].transform.localScale.x +  this.blackholes[i].transform.localScale.y   + this.blackholes[i].transform.localScale.z ) / 3.0f){
+				gameOver = true;
+				message = "You got absorbed by a blackhole!";
+			}
+			
+		}
+	
+	
+	
 		//Update according to the user controls:
-		transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
+		//transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
 		transform.Rotate(rotateDirection * turnSpeed * Time.deltaTime);
 		
 		//Update according to the environment laws:
 		Vector3 force = new Vector3(0,0,0);
+		force += transform.TransformPoint(moveDirection * moveSpeed * Time.deltaTime);
 
 		this.planets[1].renderer.material.color = Color.cyan;
 
@@ -98,26 +144,66 @@ public class Movements : MonoBehaviour {
 			}
 		}
 		for(int i = 0; i < this.stars.Length ; i++){
-			if(this.getDistance(this.planets[i]) <= this.range){
+			if(this.getDistance(this.stars[i]) <= this.range){
 				float starMass = this.starsVolumicMass * (4.0f/3.0f) * Mathf.PI * Mathf.Pow(this.stars[i].transform.lossyScale.magnitude , 3) ;
-				force += - G * this.mass * starMass * this.getDirection(this.stars[i])/Mathf.Max(0.001f, Mathf.Pow(this.getDistance(this.planets[i]), 3));
+				//force += - G * this.mass * starMass * this.getDirection(this.stars[i])/Mathf.Max(0.001f, Mathf.Pow(this.getDistance(this.stars[i]), 3));
 			}
 		}
 		for(int i = 0; i < this.blackholes.Length ; i++){
-			if(this.getDistance(this.planets[i]) <= this.range){
+			if(this.getDistance(this.blackholes[i]) <= this.range){
 				float blackholeMass = this.blackholesVolumicMass * (4.0f/3.0f) * Mathf.PI * Mathf.Pow(this.blackholes[i].transform.lossyScale.magnitude , 3) ;
-				force += - G * this.mass * blackholeMass * this.getDirection(this.blackholes[i])/Mathf.Max(0.001f, Mathf.Pow(this.getDistance(this.planets[i]), 3));
+				//force += - G * this.mass * blackholeMass * this.getDirection(this.blackholes[i])/Mathf.Max(0.001f, Mathf.Pow(this.getDistance(this.blackholes[i]), 3));
 			}
 		}
 
+		//Find the closest element
+		/*float distance = range;
+		GameObject closestObject = null;
+
+		for(int i = 0; i < this.planets.Length ; i++){
+			//Check if the planet is in the range
+			if(this.getDistance(this.planets[i]) < distance){
+				closestObject = this.planets[i];
+			}
+		}
+		for(int i = 0; i < this.stars.Length ; i++){
+			if(this.getDistance(this.stars[i]) <= distance){
+				closestObject = this.stars[i];
+			}
+		}
+		for(int i = 0; i < this.blackholes.Length ; i++){
+			if(this.getDistance(this.blackholes[i]) <= distance){
+				closestObject = this.blackholes[i];
+			}
+		}
+
+		if (closestObject != null) {
+						float objectMass = this.planetsVolumicMass * (4.0f / 3.0f) * Mathf.PI * Mathf.Pow (closestObject.transform.lossyScale.magnitude, 3);
+						force += - G * this.mass * objectMass * this.getDirection (closestObject) / Mathf.Max (0.001f, Mathf.Pow (this.getDistance (closestObject), 3));
+		} else {
+			acceleration = new Vector3(0,0,0);
+			velocity = new Vector3(0,0,0);
+				}*/
+
+
 		//force = -force;
+		if (transform.position.magnitude <= maxRange) {
 		transform.Translate(Time.deltaTime * velocity + Time.deltaTime * Time.deltaTime * 0.5f * acceleration, Space.World);
-		//transform.Rotate();TODO add torque here
 		
 		//Update Velocity and acceleration
-		velocity = velocity + Time.deltaTime * 0.5f * (acceleration + (1 / this.mass) * force);
+
 		acceleration = (1 / this.mass) * force;
 
+			velocity = velocity + Time.deltaTime * 0.5f * (acceleration + (1 / this.mass) * force);
+				}
+				else {
+			
+			acceleration = new Vector3(0,0,0);
+			
+			velocity = new Vector3(0,0,0);
+			gameOver = true;
+			message = "You reached the end of the universe!";
+			}
 		
 		if(Input.GetKey(KeyCode.C))//For testing purpose only: to be removed
 		{
@@ -157,5 +243,7 @@ public class Movements : MonoBehaviour {
 		
 		resetMoveDirection ();
 		resetRotation ();
+		
+		}
 	}
 }
