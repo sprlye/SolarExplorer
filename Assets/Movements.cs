@@ -16,12 +16,14 @@ public class Movements : MonoBehaviour {
 	public GameObject[] stars;
 	public GameObject[] blackholes;
 	GameObject gaze;
-	float planetsVolumicMass = 60000000.0f;
-	float starsVolumicMass = 100000000.0f;
-	float blackholesVolumicMass = 1000000000.0f;
+	float planetsVolumicMass = 600000000.0f;
+	float starsVolumicMass = 1000000000.0f;
+	float blackholesVolumicMass = 10000000000.0f;
 	
 	bool gameOver = false;
 	string message = "";
+	
+	GameObject curClosestObject = null;//Contains the current closest object
 	
 	Vector3 moveDirection, rotateDirection;
 	
@@ -56,7 +58,7 @@ public class Movements : MonoBehaviour {
 			}
 		}
 		
-		GUI.Box(new Rect(Screen.width/4.0f,Screen.height/4.0f,Screen.width/2.0f,Screen.height/2.0f), this.transform.position.x.ToString());
+		//GUI.Box(new Rect(Screen.width/4.0f,Screen.height/4.0f,Screen.width/2.0f,Screen.height/2.0f), this.transform.position.x.ToString());
 		
 	}
 	
@@ -69,7 +71,7 @@ public class Movements : MonoBehaviour {
 		moveDirection = new Vector3 (0,0,0);
 		rotateDirection = new Vector3 (0,0,0);
 		
-		GameObject[] gazes = GameObject.FindGameObjectsWithTag("LunaGaze");
+		GameObject[] gazes = GameObject.FindGameObjectsWithTag("MainCamera");
 		gaze = gazes[0];
 	}
 	
@@ -153,7 +155,7 @@ public class Movements : MonoBehaviour {
 			//force += - G * this.mass * planetMass * this.getDirection(this.planets[1])/Mathf.Max(0.001f, Mathf.Pow(this.getDistance(this.planets[1]), 3));
 			
 			//Use Newton law to compute forces
-			for(int i = 0; i < this.planets.Length ; i++){
+			/*for(int i = 0; i < this.planets.Length ; i++){
 				//Check if the planet is in the range
 				if(this.getDistance(this.planets[i]) <= this.range){
 					float planetMass = this.planetsVolumicMass * (4.0f/3.0f) * Mathf.PI * Mathf.Pow(this.planets[i].transform.lossyScale.magnitude , 3) ;
@@ -171,10 +173,10 @@ public class Movements : MonoBehaviour {
 					float blackholeMass = this.blackholesVolumicMass * (4.0f/3.0f) * Mathf.PI * Mathf.Pow(this.blackholes[i].transform.lossyScale.magnitude , 3) ;
 					//force += - G * this.mass * blackholeMass * this.getDirection(this.blackholes[i])/Mathf.Max(0.001f, Mathf.Pow(this.getDistance(this.blackholes[i]), 3));
 				}
-			}
+			}*/
 			
 			//Find the closest element
-			/*float distance = range;
+			float distance = range;
 		GameObject closestObject = null;
 
 		for(int i = 0; i < this.planets.Length ; i++){
@@ -195,12 +197,21 @@ public class Movements : MonoBehaviour {
 		}
 
 		if (closestObject != null) {
-						float objectMass = this.planetsVolumicMass * (4.0f / 3.0f) * Mathf.PI * Mathf.Pow (closestObject.transform.lossyScale.magnitude, 3);
-						force += - G * this.mass * objectMass * this.getDirection (closestObject) / Mathf.Max (0.001f, Mathf.Pow (this.getDistance (closestObject), 3));
+				float objectMass = this.planetsVolumicMass * (4.0f / 3.0f) * Mathf.PI * Mathf.Pow (closestObject.transform.lossyScale.magnitude, 3);
+				force += - G * this.mass * objectMass * this.getDirection (closestObject) / Mathf.Max (0.001f, Mathf.Pow (this.getDistance (closestObject), 3));
+		if(closestObject != curClosestObject){
+
+					curClosestObject = closestObject;
+					velocity = new Vector3(0,0,0);
+					acceleration = new Vector3(0,0,0);
+						}
+						else{
+						
+						}
 		} else {
 			acceleration = new Vector3(0,0,0);
 			velocity = new Vector3(0,0,0);
-				}*/
+				}
 			
 			
 			//force = -force;
