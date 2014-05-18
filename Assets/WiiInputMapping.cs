@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public class WiiInputMapping : MonoBehaviour {
 
+	LineRenderer line;
 
 	// Basic wii function
 	[DllImport ("UniWii")]
@@ -122,9 +123,9 @@ public class WiiInputMapping : MonoBehaviour {
 		//Get average new IR value ( again to ensure smooth motion since raw signal is very noisy)
 		irX = getAverageIR(irXValues);
 		irY = getAverageIR(irYValues);
-
+		
 	}
-
+	
 	void Update() {
 		
 		int c = wiimote_count();
@@ -219,6 +220,7 @@ public class WiiInputMapping : MonoBehaviour {
 				if(wiimote_getButtonA(PLAYER1)){
 
 					Debug.Log("Tja A");
+					line.enabled = true;
 
 					//If user is not already interacting with object check wether he is hitting an object
 					if(!wiimoteInteractingWithObject){
@@ -227,12 +229,14 @@ public class WiiInputMapping : MonoBehaviour {
 						//Create a new ray from the camera and shoot into scene
 						Ray ray = Camera.current.ScreenPointToRay(new Vector3(pointerX,pointerY,Camera.current.transform.position.z));
 						RaycastHit hit;
-
+						line.SetPosition(0, ray.origin);
+						
 						//Check if it hits something
 						if(Physics.Raycast(ray, out hit)){
 
 							//Check which object it hit and save it
 							Debug.Log ("Hit object: " + hit.transform.gameObject.name + "\n");
+							line.SetPosition(1, hit.point);
 							interactingObject = hit.transform.gameObject;
 
 							//Set interacting value to true
@@ -247,6 +251,8 @@ public class WiiInputMapping : MonoBehaviour {
 						}
 						else{
 							Debug.Log ("Didn't hit anything :( ");
+							line.SetPosition(1, ray.GetPoint(100));
+
 						}
 						cursorText = "x: " + pointerX + "\n y: " + pointerY;
 
@@ -266,8 +272,8 @@ public class WiiInputMapping : MonoBehaviour {
 						interactingObject.transform.position = curScreenPoint;
 
 					}
-
-
+					line.enabled = false;
+					
 				}
 				else{
 					//If A button is not pressed there is no interaction and it should be dropped. 
@@ -309,7 +315,10 @@ public class WiiInputMapping : MonoBehaviour {
 			wiimote_enableIR (PLAYER1);
 		}
 
-
+		line = gameObject.GetComponent<LineRenderer>();
+		line.enabled = false;
+		
+		
 	}
 	void OnApplicationQuit() {
 		wiimote_stop();}

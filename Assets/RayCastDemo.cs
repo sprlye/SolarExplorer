@@ -9,6 +9,7 @@ public class RayCastDemo : MonoBehaviour {
 	GameObject interactingObject;
 	bool hittingObject;
 	Vector3 screenPosition, currentScreenPosition, offset;
+	LineRenderer line;
 	
 	
 	void Update () {
@@ -16,11 +17,14 @@ public class RayCastDemo : MonoBehaviour {
 		//Get input
 		if (Input.GetMouseButton(0)) {
 
+			line.enabled = true;
 
 			Debug.Log ("Mouseposition: (" + Input.mousePosition.x + " , " + Input.mousePosition.y + ")");
 			//Check for hit
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
+			line.SetPosition(0, ray.origin);
+
 			
 			if (!hittingObject && Physics.Raycast(ray, out hit)) {
 //				if (hit.transform == target1) {
@@ -32,6 +36,8 @@ public class RayCastDemo : MonoBehaviour {
 
 				//Save that we are hitting something
 				interactingObject = hit.transform.gameObject;
+				//line.SetPosition(1, hit.point);
+
 				hittingObject = true;
 
 				//Save the objects position in screen coordinates
@@ -41,8 +47,6 @@ public class RayCastDemo : MonoBehaviour {
 				offset = interactingObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPosition.z));
 				
 			}
-
-			
 			
 			if(hittingObject){
 
@@ -50,11 +54,20 @@ public class RayCastDemo : MonoBehaviour {
 				curScreenPoint = Camera.main.ScreenToWorldPoint(curScreenPoint) + offset;
 
 				interactingObject.transform.position = curScreenPoint;
+				line.SetPosition(1, curScreenPoint);
 			}
+			else{
+				line.SetPosition(1, ray.origin);
+			}
+
+
+
 		} 
 		else {
 			Debug.Log("Hit nothing");
 			hittingObject = false;
+				line.enabled = false;
+
 		}
 
 		
@@ -64,5 +77,12 @@ public class RayCastDemo : MonoBehaviour {
 	void OnGUI() {
 		GUI.Label( new Rect(10,10, 500, 100), display);
 	}
+
+	void Start()
+	{
+		line = gameObject.GetComponent<LineRenderer>();
+		line.enabled = false;
+	}
+
 	
 }
