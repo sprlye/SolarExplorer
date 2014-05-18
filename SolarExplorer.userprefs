@@ -1,10 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Movements.cs">
     <Files>
-      <File FileName="Assets\Movements.cs" Line="162" Column="1" />
-      <File FileName="Assets\Movements.cs" Line="109" Column="5" />
-      <File FileName="Assets\MovementsWithHeadTracking.cs" Line="1" Column="1" />
+      <File FileName="Assets\HeadMovementTest.cs" Line="80" Column="29" />
+      <File FileName="Assets\cameraMovements.cs" Line="1" Column="1" />
+      <File FileName="Assets\Movements.cs" Line="97" Column="6" />
+      <File FileName="Assets\HeadMovementTest.cs" Line="83" Column="1" />
+      <File FileName="Assets\WiiInputMapping.cs" Line="72" Column="34" />
+      <File FileName="Assets\UDPReceive.cs" Line="1" Column="1" />
+      <File FileName="Assets\UniWiiCheck.cs" Line="1" Column="1" />
+      <File FileName="Assets\RayCastDemo.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

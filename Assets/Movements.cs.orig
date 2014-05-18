@@ -133,13 +133,17 @@ public class Movements : MonoBehaviour {
 	
 	
 		//Update according to the user controls:
+<<<<<<< Updated upstream
 		//transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
+=======
+		transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
 
 //		GameObject control = GameObject.Find ("FaceAPICamera");
 //		var oldPosition = control.transform.localPosition;
 //		//		control.transform.localPosition = new Vector3 (0,0,0);
 //		var oldPosition = transform.localPosition;
 //		transform.localPosition = new Vector3 (0,0,0);
+>>>>>>> Stashed changes
 		transform.Rotate(rotateDirection * turnSpeed * Time.deltaTime);
 //		transform.localPosition = oldPosition;
 
