@@ -183,16 +183,19 @@ public class Movements : MonoBehaviour {
 			//Check if the planet is in the range
 			if(this.getDistance(this.planets[i]) < distance){
 				closestObject = this.planets[i];
+					distance = this.getDistance(this.planets[i]);
 			}
 		}
 		for(int i = 0; i < this.stars.Length ; i++){
 			if(this.getDistance(this.stars[i]) <= distance){
 				closestObject = this.stars[i];
+					distance = this.getDistance(this.stars[i]);
 			}
 		}
 		for(int i = 0; i < this.blackholes.Length ; i++){
 			if(this.getDistance(this.blackholes[i]) <= distance){
 				closestObject = this.blackholes[i];
+					distance = this.getDistance(this.blackholes[i]);
 			}
 		}
 
