@@ -1,7 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2008
 
-Project("{2AD0734F-DE98-251C-6750-BD3780A532A9}") = "SolarExplorer", "Assembly-CSharp-vs.csproj", "{27925B8B-EFE3-C010-C45D-BEC22C49190E}"
+Project("{4B0EE757-945B-B0AA-38C5-968B72F3E5B4}") = "solarExplorer", "Assembly-CSharp-vs.csproj", "{76501762-45F0-B1FD-7814-9935C292070C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,15 +9,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{27925B8B-EFE3-C010-C45D-BEC22C49190E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{27925B8B-EFE3-C010-C45D-BEC22C49190E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{27925B8B-EFE3-C010-C45D-BEC22C49190E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{27925B8B-EFE3-C010-C45D-BEC22C49190E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76501762-45F0-B1FD-7814-9935C292070C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76501762-45F0-B1FD-7814-9935C292070C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76501762-45F0-B1FD-7814-9935C292070C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76501762-45F0-B1FD-7814-9935C292070C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																									GlobalSection(MonoDevelopProperties) = preSolution
+																											GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
